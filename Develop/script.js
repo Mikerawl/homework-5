@@ -98,16 +98,41 @@ function storeData() {
   
  document.querySelectorAll(".saveBtn").forEach((element) => {
     element.addEventListener('mousedown', (event) => {
-     
+      event.preventDefault();
 
 var entryId = element.id
 
+var entry = element.previousElementSibling.value;
+console.log('entry', entry);
+
+var addEntry  = { 
+  "id": entryId, 
+  "entry": entry,
+  } 
+
+  var existingSchedule = JSON.parse(localStorage.getItem("allSchedules")) || [];
+
+  localStorage.setItem("addEntry", JSON.stringify(addEntry)) 
+  existingSchedule.push(addEntry)
+  localStorage.setItem("allSchedules", JSON.stringify(existingSchedule))
+
     })
   })
- 
-   
+}
+storeData()
 
+function retrieveData() { 
+var existingSchedules = JSON.parse(localStorage.getItem("allSchedules"));
+existingSchedules.forEach((schedule)=> {
+  var eventItem = schedule.entry;
+  var saveBtn = schedule.id;
+  var saveId = document.getElementById(`${saveBtn}`)
+  var eventSpot = saveId.previousElementSibling;
+  eventSpot.value = eventItem
+
+  
+})  
 
 }
 
-storeData()
+retrieveData();
