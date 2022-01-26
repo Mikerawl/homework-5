@@ -2,101 +2,132 @@ var today = moment().format("MMMM Do YYYY");
 console.log(today);
 $("#currentDay").text(today);
 
-// var hours = ['8', '9', '10', '11', '12', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-
-var saveBtn = document.querySelectorAll(".saveBtn");
+var saveBtns = document.querySelectorAll(".saveBtn");
 var day = document.getElementById("day");
 
 function dailyPlanner() {
-    var row;
-    var hours = [
-        "8 am",
-        "9 am",
-        "10 am",
-        "11 am",
-        "12 pm",
-        "1 pm",
-        "2 pm",
-        "3 pm",
-        "4 pm",
-        "5 pm",
-        "6 pm",
-        "7 pm",
-        "8 pm",
-        "9 pm",
-    ];
-    var time = "8 am";
-    // for (i = 0; i < hours.length; i++)
+  let row = "";
+  var hours = [
+    "8am",
+    "9 am",
+    "10 am",
+    "11 am",
+    "12 pm",
+    "1 pm",
+    "2 pm",
+    "3 pm",
+    "4 pm",
+    "5 pm",
+    "6 pm",
+    "7 pm",
+    "8 pm",
+    "9 pm",
+  ];
 
-    hours.forEach((hours) => {
-        row += `<div class="row">
-        <div class="time-block">${hours}</div>
-        <input class="text-input" value="" placeholder="event entry">
-          <div class="saveBtn">save</div> 
-          
+  hours.forEach((hour) => {
+    row += `<div class="row">
+        <div class="time-block">${hour}</div>
+        <input class="text-input" value="" placeholder="Input" value="">
+       
+        <button class="saveBtn">Save</button> 
+   
       </div>`;
-    });
-    day.innerHTML = row;
-
+  });
+  day.innerHTML = row;
 }
 dailyPlanner();
 
-// Function for changing the colors of the particular time slots.  This will utilize boolean values for past and future times.
-// First get current time
-function highLighting() {
-    var now = new Date();
-    var currentHour = now.getHours();
-
-    var saveBtns = document.querySelectorAll(".saveBtn");
-
-    saveBtns.forEach((saveBtn) => {
-        timeBtn = saveBtn.classList;
-
-        inputTime = saveBtn.previousElementSibling.classList;
-
-        timeClass = saveBtn.previousElementSibling.previousElementSibling.classList;
-
-        timeText = saveBtn.previousElementSibling.previousElementSibling.innerHTML;
-
-        var hour = moment(timeText, ["h:mm A"]).format("HH");
-
-        console.log("text", hour);
-
-        if (hour < currentHour) {
-            timeBtn.add("past");
-            inputTime.add("past");
-            timeClass.add("past");
-        } else if (hour == currentHour) {
-            timeBtn.add("present");
-            inputTime.add("present");
-            timeClass.add("present");
-        } else {
-            timeBtn.add("future");
-            inputTime.add("future");
-            timeClass.add("future");
-        }
-    });
+//for loop to add id's to save buttons
+function addHour() {
+  let saveBtnId = document.getElementsByClassName("saveBtn");
+  let length = saveBtnId.length;
+  for (i = 0; i < length; i++) {
+    saveBtnId[i].id = "saveBtn-Id-" + (i + 1);
+  }
 }
-highLighting();
+addHour();
 
-// add ids to the hour rows
-function addEventID() {
-    var saveData = document.getElementsByClassName("saveBtn");
-    let length = saveData.length;
-    for (i = 0; i < length; i++) {
-        saveData[i].id = "saveBtnid-" + (i + 1);
+// Fills the entryies from local storage
+function fill() {
+  // get items from local storage
+  var existingSchedule = JSON.parse(localStorage.getItem("allSchedules"));
+
+  if (existingSchedule) {
+    // go through each item from local storeage and match ids - insert entries in to input field
+    existingSchedule.forEach((item) => {
+      console.log("item", item);
+      itemId = item.id;
+      entry = item.entry;
+
+      var itemFill = document.getElementById(`${itemId}`);
+      var entryFill = itemFill.previousElementSibling;
+
+      itemFill.previousElementSibling.value = entry;
+    });
+  } else {
+  }
+}
+fill();
+
+// Save to local storage
+function saveEntries() {
+  saveBtns = document.querySelectorAll(".saveBtn");
+
+  // Listens for a click on all save buttons
+  saveBtns.forEach((item) => {
+    item.addEventListener("click", (e) => {
+      // get items to be saved to localstorage
+      let itemId = item.id;
+      entry = item.previousElementSibling.value;
+
+      var addEntry = {
+        id: itemId,
+        entry: entry,
+      };
+
+      // saving to local storage
+      var existingSchedule =
+        JSON.parse(localStorage.getItem("allSchedules")) || [];
+
+      localStorage.setItem("addEntry", JSON.stringify(addEntry));
+      existingSchedule.push(addEntry);
+      localStorage.setItem("allSchedules", JSON.stringify(existingSchedule));
+    });
+  });
+}
+saveEntries();
+
+// Sets color of box based on time
+function getHours() {
+  //  determine the current hour...
+  let now = new Date();
+  let currentHour = now.getHours();
+
+  var timeBlock = document.querySelectorAll(".saveBtn");
+
+  // for each time block evalute the time and se approrate colors
+  timeBlock.forEach((time) => {
+    timeBtn = time.classList;
+
+    inputTime = time.previousElementSibling.classList;
+    timeTime = time.previousElementSibling.previousElementSibling.classList;
+    var hour = time.previousElementSibling.previousElementSibling.innerHTML;
+
+    var day = moment(hour, ["h:mm A"]).format("HH");
+
+    if (day < currentHour) {
+      timeBtn.add("past");
+      inputTime.add("past");
+      timeTime.add("past");
+    } else if (day == currentHour) {
+      timeBtn.add("present");
+      inputTime.add("present");
+      timeTime.add("present");
+    } else {
+      timeBtn.add("future");
+      inputTime.add("future");
+      timeTime.add("future");
     }
+  });
 }
-addEventID();
-// Information needs to added local storage
-function storeData() {
-    document.querySelectorAll(".saveBtn").forEach((element) => {
-        console.log('element', element)
-
-        element.addEventListener('click', (event) => {
-            var entryId = element.id;
-        });
-    });
-}
-
-storeData();
+getHours();

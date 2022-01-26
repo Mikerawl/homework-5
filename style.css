@@ -1,24 +1,19 @@
 :root {
+  /* future colors */
+  --waterLeaf: #9ee0e6;
+  --waterLoo: #7e7ca0;
 
-/* future colors */
---waterLeaf: #9ee0e6;
---waterLoo: #7e7ca0;
+  /* current day colors */
+  --deYork: #7dc386;
+  --cornField: #f6facb;
 
-/* current day colors */
---deYork: #7DC386;
---cornField: #F6FACB;
-
-/* past colors */
---canCan: #DD97AB;
---chathamsBlue: #133F6F;
-
+  /* past colors */
+  --canCan: #dd97ab;
+  --chathamsBlue: #133f6f;
 }
 
-
-
-
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-size: 16px;
   line-height: 1;
 }
@@ -45,7 +40,6 @@ textarea {
   width: 80vw;
   display: flex;
   flex-direction: column;
-
 }
 
 .description {
@@ -53,7 +47,6 @@ textarea {
 }
 
 .text-input {
- 
   width: 80%;
   justify-content: flex-start;
   align-content: center;
@@ -68,10 +61,7 @@ textarea {
   display: flex;
   justify-content: center;
   align-content: center;
-  
-
 }
-
 
 .button {
   width: 10%;
@@ -111,7 +101,6 @@ textarea {
 
 .saveBtn {
   border: 1px solid black;
-  
   color: white;
   padding: 10px;
 }
@@ -123,6 +112,5 @@ textarea {
 
 .column {
   display: flex;
-  flex-direction: column
+  flex-direction: column;
 }
-
